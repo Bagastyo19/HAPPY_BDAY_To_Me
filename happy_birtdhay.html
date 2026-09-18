@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday To Me! 🎉</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-heading {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Custom Glassmorphism Effect */
+    .glass-card {
+      background: rgba(17, 24, 39, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* Glow Effects */
+    .glow-text {
+      text-shadow: 0 0 20px rgba(236, 72, 153, 0.6), 0 0 40px rgba(168, 85, 247, 0.4);
+    }
+
+    .glow-btn {
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+      transition: all 0.3s ease;
+    }
+    
+    .glow-btn:hover {
+      box-shadow: 0 0 35px rgba(236, 72, 153, 0.8), 0 0 15px rgba(168, 85, 247, 0.6);
+      transform: translateY(-2px);
+    }
+
+    /* Canvas background layer */
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Pulse animation */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+
+    .animate-pulse-subtle {
+      animation: subtlePulse 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative selection:bg-pink-500 selection:text-white">
+
+  <!-- Canvas for dynamic bottom-launched fireworks -->
+  <canvas id="fireworksCanvas"></canvas>
+
+  <!-- Ambient Glowing Background Spheres -->
+  <div class="fixed top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 bg-pink-600/20 rounded-full blur-3xl pointer-events-none -z-0"></div>
+  <div class="fixed bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none -z-0"></div>
+
+  <!-- Main Application Container -->
+  <main class="relative z-10 w-full max-w-4xl my-8">
+    <div class="glass-card rounded-3xl p-6 md:p-10 text-center relative overflow-hidden">
+      
+      <!-- Top Decorative Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-pill text-pink-300 text-xs md:text-sm font-semibold tracking-wider uppercase mb-6 animate-pulse-subtle">
+        <i class="fa-solid fa-cake-candles text-pink-400"></i>
+        <span>Special Celebration Day</span>
+      </div>
+
+      <!-- Main Title -->
+      <h1 class="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 mb-2 glow-text">
+        Happy Birthday To Me! ✨
+      </h1>
+      <p class="text-gray-300 text-base md:text-lg max-w-xl mx-auto mb-8 font-light">
+        Merapatnya waktu, berjalannya proses, dan bersyukurnya hati menyambut usia baru yang penuh kebaikan.
+      </p>
+
+      <!-- Real-Time Live Age Counter Section (ONLY IN SECONDS) -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between max-w-sm mx-auto mb-4">
+          <span class="text-xs text-gray-400 uppercase tracking-widest font-semibold">Live Age Counter (Seconds)</span>
+          <button id="configDateBtn" class="text-xs text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-1">
+            <i class="fa-solid fa-pen-to-square"></i> Set Birth Date
+          </button>
+        </div>
+
+        <!-- Single Card for Total Seconds -->
+        <div class="max-w-md mx-auto">
+          <div class="glass-pill p-6 md:p-8 rounded-3xl flex flex-col justify-center items-center bg-gradient-to-b from-pink-500/10 to-purple-500/10 border-pink-500/30 shadow-2xl">
+            <span id="totalSecondsVal" class="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-200 to-pink-400 font-heading tracking-wide">0</span>
+            <span class="text-sm md:text-base text-pink-300/90 font-semibold mt-3 tracking-widest uppercase flex items-center gap-2">
+              <i class="fa-solid fa-stopwatch text-pink-400 animate-spin"></i> <span id="ageLabel">Detik Menuju Tanggal</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Message Card -->
+      <div class="glass-pill p-6 md:p-8 rounded-2xl max-w-2xl mx-auto mb-8 relative">
+        <div class="text-pink-400 text-3xl mb-3">
+          <i class="fa-solid fa-quote-left"></i>
+        </div>
+        <p id="wishText" class="text-base md:text-lg text-gray-200 leading-relaxed font-light italic min-h-[80px] flex items-center justify-center">
+          "Terima kasih untuk diriku yang sudah bertahan, berjuang, dan melangkah jauh sampai detik ini. Semoga di usia baru ini penuh dengan keberkahan, kebahagiaan, dan kedamaian."
+        </p>
+        <div class="mt-4 flex justify-center items-center gap-2 text-xs text-gray-400 font-medium">
+          <i class="fa-solid fa-heart text-pink-500"></i>
+          <span>Self Love & Self Growth</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap justify-center gap-4">
+        <button id="launchFireworksBtn" class="glow-btn bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-3.5 px-8 rounded-full flex items-center gap-2 cursor-pointer text-sm md:text-base">
+          <i class="fa-solid fa-firework"></i>
+          <span>Luncurkan Kembang Api! 🚀</span>
+        </button>
+
+        <button id="nextWishBtn" class="glass-pill hover:bg-white/10 text-white font-semibold py-3.5 px-6 rounded-full flex items-center gap-2 transition-all cursor-pointer border border-white/20 text-sm md:text-base">
+          <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i>
+          <span>Pesan Harapan Baru ✨</span>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal Settings Tanggal Lahir -->
+  <div id="dateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-card bg-gray-900/90 rounded-3xl p-6 md:p-8 max-w-md w-full border border-gray-700 text-left">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="fa-regular fa-calendar-days text-pink-400"></i> Set Tanggal Lahir
+        </h3>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-gray-400 mb-4">
+        Masukkan tanggal dan waktu lahirmu untuk menghitung usia real-time hingga ke detik secara akurat.
+      </p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-1">Tanggal & Waktu Lahir</label>
+          <input type="datetime-local" id="birthInput" class="w-full bg-gray-800/80 border border-gray-700 rounded-xl p-3 text-white focus:outline-none focus:border-pink-500 text-sm">
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="cancelModalBtn" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white">Batal</button>
+        <button id="saveDateBtn" class="px-5 py-2 rounded-xl text-sm font-semibold bg-pink-500 hover:bg-pink-600 text-white shadow-lg shadow-pink-500/30">Simpan Tanggal</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. STATE & LOCALSTORAGE MANAGEMENT
+    // ==========================================
+    // Semua input tanggal memakai waktu Jakarta (UTC+7).
+    const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
+    let defaultBirthDate = new Date(Date.UTC(2000, 0, 1) - JAKARTA_OFFSET_MS);
+    
+    // Load from LocalStorage if available
+    const savedBirth = localStorage.getItem("userBirthDate");
+    if (savedBirth) {
+      defaultBirthDate = new Date(savedBirth);
+    }
+
+    function parseJakartaDate(value) {
+      const [datePart, timePart] = value.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hour, minute] = timePart.split(':').map(Number);
+      return new Date(Date.UTC(year, month - 1, day, hour, minute) - JAKARTA_OFFSET_MS);
+    }
+
+    function formatJakartaDate(date) {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23'
+      }).formatToParts(date).reduce((result, part) => {
+        result[part.type] = part.value;
+        return result;
+      }, {});
+      return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+    }
+
+    // List of self-wishes / motivational messages
+    const wishList = [
+      "\"Terima kasih untuk diriku yang sudah bertahan, berjuang, dan melangkah jauh sampai detik ini. Semoga di usia baru ini penuh dengan keberkahan, kebahagiaan, dan kedamaian.\"",
+      "\"Semoga di usia yang baru ini, setiap langkah impian yang sedang dirajut dimudahkan jalannya dan membuah kan hasil terbaik.\"",
+      "\"Sehat selalu jiwa dan raga. Makin bijak dalam mengambil keputusan, makin tenang menghadapi segala tantangan hidup.\"",
+      "\"Jangan pernah ragu pada kemampuan diri sendiri. Kamu lebih kuat dari apa yang kamu bayangkan!\"",
+      "\"Terima kasih sudah belajar dari kesalahan masa lalu dan tumbuh menjadi pribadi yang lebih baik hari demi hari.\"",
+      "\"Semoga dikelilingi oleh orang-orang tulus yang membawa dampak positif dan kebahagiaan sejati.\""
+    ];
+
+    let currentWishIndex = 0;
+
+    // ==========================================
+    // 2. REAL-TIME AGE COUNTER LOGIC (PURELY SECONDS)
+    // ==========================================
+    function updateAgeCounter() {
+      const now = new Date();
+      const birth = defaultBirthDate;
+
+      // Ensure valid birth date
+      if (isNaN(birth.getTime())) {
+        document.getElementById('totalSecondsVal').innerText = "0";
+        return;
+      }
+
+      // Hitung mundur menuju tanggal dan jam yang dipilih.
+      const diffInMs = birth.getTime() - now.getTime();
+      const totalSeconds = Math.max(0, Math.ceil(diffInMs / 1000));
+
+      // Update UI with formatted number (e.g. 123.456.789)
+      document.getElementById('totalSecondsVal').innerText = totalSeconds.toLocaleString('id-ID');
+      document.getElementById('ageLabel').innerText = 'Detik Menuju Tanggal';
+    }
+
+    // Run timer immediately and every second
+    updateAgeCounter();
+    setInterval(updateAgeCounter, 1000);
+
+    // ==========================================
+    // 3. FIREWORKS CANVAS SYSTEM (LAUNCH FROM BOTTOM)
+    // ==========================================
+    const canvas = document.getElementById('fireworksCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const fireworks = [];
+    const particles = [];
+
+    // Helper random utility
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // Color palettes for colorful fireworks
+    const colors = [
+      '#ff7675', '#fd79a8', '#e84393', '#00b894', 
+      '#00cec9', '#0984e3', '#6c5ce7', '#fdcb6e', '#e17055'
+    ];
+
+    // Firework Rocket Class (Launched from bottom)
+    class Firework {
+      constructor(targetX, targetY) {
+        this.x = random(canvas.width * 0.1, canvas.width * 0.9); // Launch starting point at bottom
+        this.y = canvas.height;
+        this.targetX = targetX || random(canvas.width * 0.15, canvas.width * 0.85);
+        this.targetY = targetY || random(canvas.height * 0.1, canvas.height * 0.45);
+        
+        this.distanceToTarget = Math.hypot(this.targetX - this.x, this.targetY - this.y);
+        this.distanceTraveled = 0;
+
+        // Angle and speed
+        this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+        this.speed = random(8, 14);
+        this.friction = 0.98;
+        this.hue = colors[Math.floor(Math.random() * colors.length)];
+
+        // Rocket Trail
+        this.coordinates = [];
+        this.coordinateCount = 3;
+        while (this.coordinateCount--) {
+          this.coordinates.push([this.x, this.y]);
+        }
+      }
+
+      update(index) {
+        this.coordinates.pop();
+        this.coordinates.unshift([this.x, this.y]);
+
+        this.speed *= this.friction;
+        const vx = Math.cos(this.angle) * this.speed;
+        const vy = Math.sin(this.angle) * this.speed;
+
+        this.distanceTraveled = Math.hypot(this.x - this.coordinates[this.coordinates.length - 1][0], this.y - this.coordinates[this.coordinates.length - 1][1]);
+
+        if (this.distanceTraveled >= this.distanceToTarget || this.speed < 1.5) {
+          createExplosion(this.targetX, this.targetY, this.hue);
+          fireworks.splice(index, 1);
+        } else {
+          this.x += vx;
+          this.y += vy;
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.coordinates[this.coordinates.length - 1][0], this.coordinates[this.coordinates.length - 1][1]);
+        ctx.lineTo(this.x, this.y);
+        ctx.strokeStyle = this.hue;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+    }
+
+    // Sparkle Particle Class
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.angle = random(0, Math.PI * 2);
+        this.speed = random(1, 10);
+        this.friction = 0.95;
+        this.gravity = 0.6;
+        this.alpha = 1;
+        this.decay = random(0.015, 0.03);
+
+        this.coordinates = [];
+        this.coordinateCount = 5;
+        while (this.coordinateCount--) {
+          this.coordinates.push([this.x, this.y]);
+        }
+      }
+
+      update(index) {
+        this.coordinates.pop();
+        this.coordinates.unshift([this.x, this.y]);
+
+        this.speed *= this.friction;
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed + this.gravity;
+        this.alpha -= this.decay;
+
+        if (this.alpha <= this.decay) {
+          particles.splice(index, 1);
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.moveTo(this.coordinates[this.coordinates.length - 1][0], this.coordinates[this.coordinates.length - 1][1]);
+        ctx.lineTo(this.x, this.y);
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function createExplosion(x, y, color) {
+      const particleCount = 60;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    // Animation Loop
+    function loop() {
+      requestAnimationFrame(loop);
+
+      // Create translucent background trail
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'lighter';
+
+      // Draw & Update Fireworks
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        fireworks[i].draw();
+        fireworks[i].update(i);
+      }
+
+      // Draw & Update Explosion Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].draw();
+        particles[i].update(i);
+      }
+    }
+
+    // Start Animation Loop
+    loop();
+
+    // Launch Batch Fireworks
+    function triggerFireworksBatch(count = 5) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          fireworks.push(new Firework());
+        }, i * 300);
+      }
+    }
+
+    // Initial Welcome Fireworks
+    window.addEventListener('load', () => {
+      triggerFireworksBatch(6);
+    });
+
+    // Auto periodic background fireworks (every 4 seconds)
+    setInterval(() => {
+      if (fireworks.length < 3) {
+        fireworks.push(new Firework());
+      }
+    }, 4000);
+
+    // ==========================================
+    // 4. UI INTERACTIONS & MODAL HANDLERS
+    // ==========================================
+    const launchFireworksBtn = document.getElementById('launchFireworksBtn');
+    const nextWishBtn = document.getElementById('nextWishBtn');
+    const wishText = document.getElementById('wishText');
+
+    // Button Launch Fireworks
+    launchFireworksBtn.addEventListener('click', () => {
+      triggerFireworksBatch(8);
+    });
+
+    // Button Next Wish with smooth fade effect
+    nextWishBtn.addEventListener('click', () => {
+      wishText.classList.add('opacity-0');
+      setTimeout(() => {
+        currentWishIndex = (currentWishIndex + 1) % wishList.length;
+        wishText.innerText = wishList[currentWishIndex];
+        wishText.classList.remove('opacity-0');
+      }, 200);
+
+      // Trigger mini firework explosion
+      triggerFireworksBatch(2);
+    });
+
+    // Date Modal Controls
+    const dateModal = document.getElementById('dateModal');
+    const configDateBtn = document.getElementById('configDateBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const saveDateBtn = document.getElementById('saveDateBtn');
+    const birthInput = document.getElementById('birthInput');
+
+    configDateBtn.addEventListener('click', () => {
+      // Pre-fill input datetime-local dalam waktu Jakarta.
+      birthInput.value = formatJakartaDate(defaultBirthDate);
+      dateModal.classList.remove('hidden');
+    });
+
+    function closeModal() {
+      dateModal.classList.add('hidden');
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
+
+    saveDateBtn.addEventListener('click', () => {
+      const selectedValue = birthInput.value;
+      if (selectedValue) {
+        const newBirth = parseJakartaDate(selectedValue);
+        if (!isNaN(newBirth.getTime())) {
+          defaultBirthDate = newBirth;
+          localStorage.setItem("userBirthDate", newBirth.toISOString());
+          updateAgeCounter();
+          triggerFireworksBatch(5);
+        }
+      }
+      closeModal();
+    });
+  </script>
+</body>
+</html>
