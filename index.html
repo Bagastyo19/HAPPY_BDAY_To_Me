@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=happy_birtdhay.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday to Myself 🎁</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at 15% 15%, #ffcf70 0, transparent 26%), radial-gradient(circle at 90% 85%, #ff8fab 0, transparent 30%), linear-gradient(135deg, #301b4d, #681d58 48%, #f06b72);
+      color: #ffffff;
+      font-family: Georgia, 'Times New Roman', serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .container {
+      background: rgba(48, 27, 77, 0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 2.3rem 2rem;
+      border-radius: 28px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      max-width: 700px;
+      width: min(92%, 700px);
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      margin-bottom: 0.5rem;
+      color: #ffd166;
+      text-shadow: 3px 3px 0 #b43770;
+    }
+
+    p.subtitle {
+      font-size: 1rem;
+      color: #ffe9df;
+      margin-bottom: 1.5rem;
+    }
+
+    .gift-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(145deg, #315c82, #193653);
+      border-radius: 16px;
+      min-height: 125px;
+      color: white;
+      cursor: pointer;
+      font-size: 2.8rem;
+      transition: transform 0.2s, filter 0.2s;
+      box-shadow: 0 7px 0 #10243a;
+    }
+
+    .gift-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      margin: 1rem auto 1.5rem;
+    }
+
+    .gift-button span {
+      display: block;
+      font: bold 0.78rem Georgia, serif;
+      margin-top: 0.35rem;
+      color: #fff6e9;
+    }
+
+    .gift-button:hover {
+      transform: translateY(-6px) rotate(2deg);
+      filter: brightness(1.15);
+    }
+
+    .gift-button.opened {
+      background: linear-gradient(145deg, #4d8f9d, #28616f);
+      box-shadow: 0 7px 0 #19414a;
+      transform: translateY(2px);
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1.2rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #fff2e8;
+      margin-bottom: 1.5rem;
+      min-height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button {
+      background: linear-gradient(45deg, #ffd166, #ff8fab);
+      border: none;
+      color: #4d204f;
+      padding: 0.8rem 1.8rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(232, 67, 147, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Confetti Animation Elements */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #f1c40f;
+      opacity: 0.8;
+      top: -10px;
+      animation: fall linear infinite;
+    }
+
+    .sparkle {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: float 4s ease-in-out infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      50% { transform: translateY(-18px) rotate(12deg); }
+    }
+
+    @media (max-width: 520px) {
+      .container { padding: 1.8rem 1rem; }
+      .gift-button { min-height: 105px; font-size: 2.4rem; }
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(105vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <span class="sparkle" style="top: 10%; left: 8%;">✦</span>
+  <span class="sparkle" style="top: 18%; right: 9%; animation-delay: 1s;">✧</span>
+  <span class="sparkle" style="bottom: 10%; left: 12%; animation-delay: 2s;">✦</span>
+
+  <div class="container">
+    <h1>Happy Birthday to Myself! 🎂</h1>
+    <p class="subtitle">Hari ini aku merayakan diriku dan semua hal baik yang akan datang. ✨</p>
+
+    <div class="gift-grid" id="giftGrid"></div>
+    
+    <div class="card" id="messageBox">
+      Klik salah satu gift untuk membuka pesannya ✨
+    </div>
+
+    <button onclick="revealWish()">Baca Ucapan 🎉</button>
+  </div>
+
+  <script>
+    const wishes = [
+      "Selamat ulang tahun, sayang. Terima kasih sudah hadir dan membuat hari-hariku terasa lebih berarti.",
+      "Semoga di usia barumu ini semua impianmu dimudahkan, rezekimu dilancarkan, dan hatimu selalu dipenuhi kebahagiaan.",
+      "Aku bangga memilikimu. Tetaplah menjadi dirimu sendiri, karena bagiku kamu sudah sangat istimewa."
+    ];
+
+    const gifts = [
+      ['⌚', 'Jam Tangan', 'Waktu terus berjalan, dan aku siap menyambut babak baru dengan lebih berani.'],
+      ['👟', 'Sneakers Baru', 'Untuk setiap langkah dan petualangan baru yang akan kulewati.'],
+      ['🎮', 'Gaming Time', 'Hari ulang tahun adalah waktu yang tepat untuk santai dan menikmati hal yang kusukai.'],
+      ['🧴', 'Parfum Favorit', 'Sedikit gaya, sedikit percaya diri, dan siap menjalani hari dengan versi terbaikku.']
+    ];
+
+    let currentWish = 0;
+    const giftGrid = document.getElementById('giftGrid');
+    gifts.forEach((gift, index) => {
+      const giftButton = document.createElement('button');
+      giftButton.className = 'gift-button';
+      giftButton.innerHTML = `${gift[0]}<span>${gift[1]}</span>`;
+      giftButton.addEventListener('click', () => openGift(giftButton, index));
+      giftGrid.appendChild(giftButton);
+    });
+
+    function openGift(giftButton, index) {
+      giftButton.classList.add('opened');
+      document.getElementById('messageBox').textContent = gifts[index][2];
+      createConfetti();
+    }
+
+    function revealWish() {
+      const messageBox = document.getElementById('messageBox');
+      messageBox.textContent = wishes[currentWish];
+      currentWish = (currentWish + 1) % wishes.length;
+      createConfetti();
+    }
+
+    function createConfetti() {
+      const colors = ['#ff7675', '#fdcb6e', '#00b894', '#0984e3', '#e84393'];
+      for (let i = 0; i < 25; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 8 + 6 + 'px';
+        confetti.style.height = confetti.style.width;
+        document.body.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        }, 4000);
+      }
+    }
+  </script>
+</body>
+
+  <p style="font-family: sans-serif; text-align: center; margin-top: 2rem;">
+    Membuka halaman ulang tahun...
+    <a href="happy_birtdhay.html">Klik di sini jika tidak berpindah otomatis.</a>
+  </p>
+</html>
